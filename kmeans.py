@@ -152,6 +152,7 @@ def kmeans_cluster(df, num_clusters, outfile_name, sample_size=None):
         else:
             rows_to_sample = int(num_rows / 10)
         train_df = df.sample(rows_to_sample)
+        print(f"Sampled {rows_to_sample} rows")
     else:
         train_df = df
     arr = np.array(train_df.values[0::, 2::], dtype=np.float16)
@@ -177,15 +178,18 @@ def kmeans_cluster(df, num_clusters, outfile_name, sample_size=None):
 
 def main():
     command_str = """Usage:
-kmeans.py all --in INPUT_FILE_NAME --clusters NUM_CLUSTERS --out OUTPUT_FILE_NAME [--dim FP_DIM] [--sample SAMPLE_SIZE] 
+kmeans.py all --in INPUT_FILE_NAME --clusters NUM_CLUSTERS --out OUTPUT_FILE_NAME [--fp_type FP_TYPE] [--dim FP_DIM] [--sample SAMPLE_SIZE] 
 kmeans.py fp --in INPUT_FILE_NAME [--dim FP_DIM] [--fp_type FP_TYPE] [--fp_bits FP_BITS]
-kmeans.py cluster --fp_file FINGERPRINT_FILE_NAME --clusters CLUSTER_FILE_NAME --out OUTPUT_FILE_NAME
+kmeans.py cluster --fp_file FP_FILE_NAME --clusters CLUSTER_FILE_NAME --out OUTPUT_FILE_NAME [--sample SAMPLE_SIZE]
 
 Options:
 --in INPUT_FILE_NAME 
 --clusters NUM_CLUSTERS number of clusters to output
 --out OUTPUT_FILE_NAME output csv file with SMILES, molecule name and cluster id
---fp FINGERPRINT_FILE_NAME name of fingerprint file created with the "fp" option
+--dim FP_DIM number of fingerprint bits
+--sample SAMPLE_SIZE number of molecules to use for training
+--fp_file FP_FILE_NAME name of fingerprint file created with the "fp" option
+--fp_type FP_TYPE fingerprint type, must be one of morgan2, morgan3, ap, rdkit5
 """
 
     cmd_input = docopt(command_str)
@@ -194,18 +198,24 @@ Options:
     num_clusters = int(cmd_input.get("--clusters"))
     fp_file_name = cmd_input.get("--fp_file")
     outfile_name = cmd_input.get("--out")
+    fp_dim = cmd_input.get("--dim") or 1024
+    fp_dim = int(fp_dim)
+    fp_type = cmd_input.get("--fp_type") or "morgan2"
+    num_sample = cmd_input.get("--sample")
+    if num_sample:
+        num_sample = int(num_sample)
 
     if cmd_input.get("all"):
-        fp_df = generate_fingerprint_df(infile_name)
-        kmeans_cluster(fp_df, num_clusters, outfile_name)
+        fp_df = generate_fingerprint_df(infile_name, fp_type=fp_type, fp_bits=fp_dim)
+        kmeans_cluster(fp_df, num_clusters, outfile_name, sample_size=num_sample)
     elif cmd_input.get("fp"):
-        fp_df = generate_fingerprint_df(infile_name)
+        fp_df = generate_fingerprint_df(infile_name, fp_type=fp_type, fp_bits=fp_dim)
         name, _ = os.path.splitext(infile_name)
         fp_file_name = name + "_parquet.gz"
         write_fingerprint_df(fp_df, fp_file_name)
     elif cmd_input.get("cluster"):
         fp_df = read_fingerprint_df(fp_file_name)
-        kmeans_cluster(fp_df, num_clusters, outfile_name)
+        kmeans_cluster(fp_df, num_clusters, outfile_name, sample_size=num_sample)
 
 
 if __name__ == "__main__":
