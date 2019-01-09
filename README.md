@@ -28,8 +28,17 @@ pip install environment_kernels
 ```shell
 Usage:
 kmeans.py all --in INPUT_FILE_NAME --clusters NUM_CLUSTERS --out OUTPUT_FILE_NAME [--fp_type FP_TYPE] [--dim FP_DIM] [--sample SAMPLE_SIZE]
-kmeans.py fp --in INPUT_FILE_NAME [--dim FP_DIM] [--fp_type FP_TYPE] [--fp_bits FP_BITS]
+kmeans.py fp --in INPUT_FILE_NAME [--dim FP_DIM] [--fp_type FP_TYPE]
 kmeans.py cluster --fp_file FP_FILE_NAME --clusters CLUSTER_FILE_NAME --out OUTPUT_FILE_NAME [--sample SAMPLE_SIZE]
+
+Options:
+--in INPUT_FILE_NAME
+--clusters NUM_CLUSTERS number of clusters to output
+--out OUTPUT_FILE_NAME output csv file with SMILES, molecule name and cluster id
+--dim FP_DIM number of fingerprint bits
+--sample SAMPLE_SIZE number of molecules to use for training
+--fp_file FP_FILE_NAME name of fingerprint file created with the "fp" option
+--fp_type FP_TYPE fingerprint type, must be one of morgan2, morgan3, ap, rdkit5
 ```
 At the simplest level, you can just call the script with an input file, number of clusters and an ouput file. In the 
 example below, we read a SMILES file with 10,000 molecules and cluster into 500 clusters. This will use the default
@@ -56,3 +65,14 @@ fingerprint, you could do this.
 ```shell
 kmeans.py all --in test10K.smi --clusters 500 --out test10K_clusters.csv --fp_bits 512
 ```
+If you're using processing a larger file you may want to play around with some of the 
+options.  As such, you may not want to regenerate the fingerprints every time. For cases 
+like this, the script has an alternate workflow where you can write the fingerprints to disc
+then read the fingerprints in and cluster.  The workflow is like this. 
+```shell
+kmeans.py fp --in test10K.smi 
+kmeans.py cluster --fp_file test10K_parquet.gz --clusters 500 --out test10K_clusters.csv
+```
+Calling the script with the "fp" command creates the fingerprint file test10K_parquet.gz.  This 
+fingerprint file is then used to in the second clustering step.  All of the options discussed above
+for fingerprint generation can also be used.   
