@@ -195,7 +195,9 @@ Options:
     cmd_input = docopt(command_str)
 
     infile_name = cmd_input.get("--in")
-    num_clusters = int(cmd_input.get("--clusters"))
+    num_clusters = cmd_input.get("--clusters")
+    if num_clusters:
+        num_clusters = int(num_clusters)
     fp_file_name = cmd_input.get("--fp_file")
     outfile_name = cmd_input.get("--out")
     fp_dim = cmd_input.get("--dim") or 1024
