@@ -179,7 +179,7 @@ def kmeans_cluster(df, num_clusters, outfile_name, sample_size=None):
 def main():
     command_str = """Usage:
 kmeans.py all --in INPUT_FILE_NAME --clusters NUM_CLUSTERS --out OUTPUT_FILE_NAME [--fp_type FP_TYPE] [--dim FP_DIM] [--sample SAMPLE_SIZE] 
-kmeans.py fp --in INPUT_FILE_NAME [--dim FP_DIM] [--fp_type FP_TYPE] [--fp_bits FP_BITS]
+kmeans.py fp --in INPUT_FILE_NAME [--dim FP_DIM] [--fp_type FP_TYPE]
 kmeans.py cluster --fp_file FP_FILE_NAME --clusters CLUSTER_FILE_NAME --out OUTPUT_FILE_NAME [--sample SAMPLE_SIZE]
 
 Options:
