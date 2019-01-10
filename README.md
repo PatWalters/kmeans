@@ -65,7 +65,7 @@ fingerprint, you could do this.
 ```shell
 kmeans.py all --in test10K.smi --clusters 500 --out test10K_clusters.csv --fp_bits 512
 ```
-If you're using processing a larger file you may want to play around with some of the 
+If you're processing a larger input file you may want to play around with some of the 
 options.  As such, you may not want to regenerate the fingerprints every time. For cases 
 like this, the script has an alternate workflow where you can write the fingerprints to disc
 then read the fingerprints in and cluster.  The workflow is like this. 
@@ -74,13 +74,13 @@ kmeans.py fp --in test10K.smi
 kmeans.py cluster --fp_file test10K_parquet.gz --clusters 500 --out test10K_clusters.csv
 ```
 Calling the script with the "fp" command creates the fingerprint file test10K_parquet.gz.  This 
-fingerprint file is then used to in the second clustering step.  All of the options discussed above
+fingerprint file is then used in the second clustering step with the "cluster" command.  All of the options discussed above
 for fingerprint generation can also be used.   
 
 One more useful trick with k-means clustering is to use a subset of the data to identify the cluster centers
 then use these cluster centers to map all of the molecules onto clusters.  By default, if the dataset has more than
 10,0000 molecules, the script uses 10% of the data to identify the cluster centers.  This number can be modified by
-using the "--sample" flag.  For instance, if we have 25,000 molecules and we want to use 5,000 molecules to define the
+using the "--sample" flag.  For instance, if we have 25,000 molecules and we want to use 5,000 to define the
 cluster centers, we can do something like this. 
 
 ```shell
