@@ -3,7 +3,7 @@ This script provides an implementation k-means clustering that uses the ["mini b
 together with fingerprints from the [RDKit](http://rdkit.org/). 
 
 ### Installation
-This script and the associated jupyter notebooks require the RDKit which can be [installed using Anaconda](https://www.rdkit.org/docs/Install.html). 
+The script and the associated Jupyter notebooks require the RDKit which can be [installed using Anaconda](https://www.rdkit.org/docs/Install.html). 
 
 ```shell
 conda create -c rdkit -n my-rdkit-env rdkit
@@ -76,3 +76,14 @@ kmeans.py cluster --fp_file test10K_parquet.gz --clusters 500 --out test10K_clus
 Calling the script with the "fp" command creates the fingerprint file test10K_parquet.gz.  This 
 fingerprint file is then used to in the second clustering step.  All of the options discussed above
 for fingerprint generation can also be used.   
+
+One more useful trick with k-means clustering is to use a subset of the data to identify the cluster centers
+then use these cluster centers to map all of the molecules onto clusters.  By default, if the dataset has more than
+10,0000 molecules, the script uses 10% of the data to identify the cluster centers.  This number can be modified by
+using the "--sample" flag.  For instance, if we have 25,000 molecules and we want to use 5,000 molecules to define the
+cluster centers, we can do something like this. 
+
+```shell
+kmeans.py --in test25K.smi --cluster 500 --out test25K_clusters.csv --sample 50000
+```
+
