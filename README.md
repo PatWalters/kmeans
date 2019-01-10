@@ -1,5 +1,5 @@
 # kmeans
-This script provides an implementation k-means clustering that uses the ["mini batch k-means" implementation in SciKit Learn](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.MiniBatchKMeans.html) 
+This script provides an implementation k-means clustering that uses the ["mini batch k-means" from SciKit Learn](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.MiniBatchKMeans.html) 
 together with fingerprints from the [RDKit](http://rdkit.org/). 
 
 ### Installation
