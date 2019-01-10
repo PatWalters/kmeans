@@ -8,6 +8,10 @@ The script and the associated Jupyter notebooks require the RDKit which can be [
 ```shell
 conda create -c rdkit -n my-rdkit-env rdkit
 ```
+Once you've installed the conda environment, you need to activate it. 
+```shell
+source activate my-rdkit-env
+```
 The script requires a few more Python libraries that can be installed with pip and conda. 
 
 ```shell
