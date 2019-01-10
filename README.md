@@ -91,5 +91,5 @@ using the "--sample" flag.  For instance, if we have 25,000 molecules and we wan
 cluster centers, we can do something like this. 
 
 ```shell
-kmeans.py cluster --in test25K.smi --cluster 500 --out test25K_clusters.csv --sample 50000
+kmeans.py all --in test25K.smi --cluster 500 --out test25K_clusters.csv --sample 50000
 ```
