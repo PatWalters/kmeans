@@ -40,7 +40,7 @@ Options:
 --fp_file FP_FILE_NAME name of fingerprint file created with the "fp" option
 --fp_type FP_TYPE fingerprint type, must be one of morgan2, morgan3, ap, rdkit5
 ```
-At the simplest level, you can just call the script with an input file, number of clusters and an ouput file. In the 
+At the simplest level, you can just call the script with an input file, number of clusters and an output file. In the 
 example below, we read a SMILES file with 10,000 molecules and cluster into 500 clusters. This will use the default
 RDKit 1024 bit Morgan fingerprint with a radius of 2 (morgan2).  
 
