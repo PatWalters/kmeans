@@ -86,4 +86,3 @@ cluster centers, we can do something like this.
 ```shell
 kmeans.py --in test25K.smi --cluster 500 --out test25K_clusters.csv --sample 50000
 ```
-
