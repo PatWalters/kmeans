@@ -3,6 +3,8 @@ This script provides an implementation of k-means clustering that uses the ["min
 together with fingerprints from the [RDKit](http://rdkit.org/). 
 
 ### Installation
+**Note: This script requires Python 3.6.  Seriously, Python 3.6.
+
 The script and the associated Jupyter notebooks require the RDKit which can be [installed using Anaconda](https://www.rdkit.org/docs/Install.html). 
 
 ```shell
