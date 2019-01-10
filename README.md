@@ -67,7 +67,7 @@ kmeans.py all --in test10K.smi --clusters 500 --out test10K_clusters.csv --fp_ty
 You can also change the number of fingerprint bits with the "--fpbits" flag.  To change to a 512 bit
 fingerprint, you could do this. 
 ```shell
-kmeans.py all --in test10K.smi --clusters 500 --out test10K_clusters.csv --fp_bits 512
+kmeans.py all --in test10K.smi --clusters 500 --out test10K_clusters.csv --dim 512
 ```
 If you're processing a larger input file you may want to play around with some of the 
 options.  As such, you may not want to regenerate the fingerprints every time. For cases 
