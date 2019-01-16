@@ -17,7 +17,7 @@ source activate my-rdkit-env
 The script requires a few more Python libraries that can be installed with pip and conda. 
 
 ```shell
-pip install sklearn tqdm docopt jupyter matplotlib seaborn
+pip install sklearn tqdm docopt jupyter matplotlib seaborn scipy
 pip install pandas -U
 conda install fastparquet -c conda-forge
 ```

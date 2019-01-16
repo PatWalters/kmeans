@@ -15,6 +15,8 @@ from tqdm import tqdm
 import time
 import numpy as np
 
+from scipy.spatial.distance import cdist
+
 from docopt import docopt
 
 
@@ -136,9 +138,19 @@ def read_fingerprint_df(fp_file_name):
     return df
 
 
+def find_cluster_centers(df,centers):
+    center_set = set()
+    for k,v in df.groupby("Cluster"):
+        fp_list = v.values[0::,3::]
+        dist_list = cdist([centers[k]],fp_list)
+        min_idx = np.argmin([dist_list])
+        center_set.add(v.Name.values[min_idx])
+    return ["Yes" if x in center_set else "No" for x in df.Name.values]
+
+
+
 def kmeans_cluster(df, num_clusters, outfile_name, sample_size=None):
     """
-    Read fingerprints as pandas dataframe saved in parquet format
     :param df: fingerprint dataframe
     :param num_clusters: number of clusters
     :param outfile_name: output file containing molecule name and cluster id
@@ -150,7 +162,8 @@ def kmeans_cluster(df, num_clusters, outfile_name, sample_size=None):
         if sample_size:
             rows_to_sample = sample_size
         else:
-            rows_to_sample = int(num_rows / 10)
+            # number of samples needs to at least equal the number of clusters
+            rows_to_sample = max(int(num_rows / 10),num_clusters)
         train_df = df.sample(rows_to_sample)
         print(f"Sampled {rows_to_sample} rows")
     else:
@@ -165,13 +178,16 @@ def kmeans_cluster(df, num_clusters, outfile_name, sample_size=None):
     chunks = math.ceil(all_data.shape[0] / chunk_size)
     out_list = []
     # It looks like the predict method chokes if you send too much data, chunking to 500 seems to work
+    cluster_id_list = []
     for row, names in tqdm(zip(np.array_split(all_data, chunks), np.array_split(df[['SMILES', 'Name']].values, chunks)),
                            total=chunks, desc="Processing chunk"):
         p = km.predict(row)
-        for cluster, [smiles, name] in zip(p, names):
-            out_list.append([smiles, name, cluster])
-    out_df = pd.DataFrame(out_list, columns=["SMILES", "Name", "Cluster"])
+        cluster_id_list += list(p)
     elapsed = time.time() - start
+    df.insert(2,"Cluster",cluster_id_list)
+    center_list = find_cluster_centers(df,km.cluster_centers_)
+    df.insert(3,"Center",center_list)
+    out_df = df[["SMILES", "Name", "Cluster","Center"]]
     print(f"Clustered {num_rows} into {num_clusters} in {elapsed:.1f} sec")
     out_df.to_csv(outfile_name, index=False)
 
