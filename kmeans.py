@@ -69,7 +69,7 @@ class FingerprintGenerator:
         :return: numpy array of 1 and 0 for fingerprint bits
         """
         fp = self.fp_function[0](mol)
-        arr = numpy.zeros((1,), numpy.int)
+        arr = numpy.zeros((1,), int)
         DataStructs.ConvertToNumpyArray(fp, arr)
         return arr
 
@@ -142,7 +142,9 @@ def find_cluster_centers(df,centers):
     center_set = set()
     for k,v in df.groupby("Cluster"):
         fp_list = v.values[0::,3::]
-        dist_list = cdist([centers[k]],fp_list)
+        XA = np.array([centers[k]]).astype(float)
+        XB = np.array(fp_list).astype(float)
+        dist_list = cdist(XA, XB)
         min_idx = np.argmin([dist_list])
         center_set.add(v.Name.values[min_idx])
     return ["Yes" if x in center_set else "No" for x in df.Name.values]
@@ -174,7 +176,7 @@ def kmeans_cluster(df, num_clusters, outfile_name, sample_size=None):
     km = MiniBatchKMeans(n_clusters=num_clusters, random_state=0, batch_size=3 * num_clusters)
     km.fit(arr)
     chunk_size = 500
-    all_data = np.array(df.values[0::, 2::], dtype=np.bool)
+    all_data = np.array(df.values[0::, 2::], dtype=bool)
     chunks = math.ceil(all_data.shape[0] / chunk_size)
     out_list = []
     # It looks like the predict method chokes if you send too much data, chunking to 500 seems to work
